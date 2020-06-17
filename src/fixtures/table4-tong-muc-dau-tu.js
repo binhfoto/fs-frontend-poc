@@ -1,8 +1,6 @@
-import React from "react";
-import FsTable from "./FsTable";
 import { v4 as uuidv4 } from "uuid";
 
-const fixture = {
+export default {
     columns: [
         {
             key: "isSelected",
@@ -189,18 +187,3 @@ const fixture = {
         },
     ],
 };
-
-class FsTableContainer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = fixture;
-    }
-
-    render() {
-        const { columns, rows } = this.state;
-
-        return <FsTable columns={columns} rows={rows} mode="view" />;
-    }
-}
-
-export default FsTableContainer;

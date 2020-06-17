@@ -3,7 +3,7 @@ import isEmpty from "lodash/isEmpty";
 
 import FsRow from "./FsRow";
 
-function normalizeRows(rows) {
+function normalizeRows(rows, indent) {
     let flatRows = [];
 
     rows.forEach((row) => {
@@ -11,9 +11,9 @@ function normalizeRows(rows) {
             return [];
         }
 
-        flatRows = [...flatRows, row];
+        flatRows = [...flatRows, { ...row, indent }];
         if (!isEmpty(row.rows)) {
-            flatRows = [...flatRows, ...normalizeRows(row.rows)];
+            flatRows = [...flatRows, ...normalizeRows(row.rows, indent + 1)];
         }
     });
 
@@ -44,7 +44,7 @@ function normalizeRows(rows) {
 
 export default function FsRows(props) {
     const { rows, columns, mode } = props;
-    const normalizedRows = normalizeRows(rows);
+    const normalizedRows = normalizeRows(rows, 0);
     return (
         <>
             {normalizedRows.map((row, index) => (

@@ -15,7 +15,7 @@ function renderHeader(columns) {
 function renderRows(rows, columns, mode) {
     return (
         <tbody>
-            <FsRows rows={rows} columns={columns} />
+            <FsRows rows={rows} columns={columns} mode={mode} />
         </tbody>
     );
 }

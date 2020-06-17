@@ -3,7 +3,7 @@ import "./styles/index.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import FsTableContainer from "./components/FsTableContainer";
+import FsTableContainer from "./features/table4/Table";
 
 function App() {
     return (
