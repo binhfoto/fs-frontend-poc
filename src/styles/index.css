@@ -1,0 +1,14 @@
+html,
+body {
+    /* width: 100wh; */
+    height: 100%;
+}
+
+div {
+    border: 1px solid orange;
+}
+
+#root,
+.container {
+    height: 100%;
+}
