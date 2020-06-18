@@ -1,17 +1,18 @@
-import React from "react";
+import React, { Component } from "react";
 // import isObject from "lodash/isObject";
 
 import FsTable from "../../components/FsTable";
 import FsFormulaDialog from "../../components/FsFormulaDialog";
 
+// TODO: fetch this from backend
 import fixture from "../../fixtures/table4-tong-muc-dau-tu";
 
-class FsTableContainer extends React.Component {
+class FsTableContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
             ...fixture,
-            formula: {
+            currentEditedFormula: {
                 isDialogShown: false,
                 row: null,
                 rowIndex: null,
@@ -21,11 +22,8 @@ class FsTableContainer extends React.Component {
     }
 
     render() {
-        const {
-            columns,
-            rows,
-            formula: { isDialogShown },
-        } = this.state;
+        const { columns, rows, currentEditedFormula } = this.state;
+
         return (
             <>
                 <FsTable
@@ -36,7 +34,7 @@ class FsTableContainer extends React.Component {
                     onMetricChange={this.handleMetricField}
                 />
                 <FsFormulaDialog
-                    isDialogShown={isDialogShown}
+                    currentFormula={currentEditedFormula}
                     columns={columns}
                     rows={rows}
                     onCreate={this.handleFormulaCreate}
@@ -62,22 +60,32 @@ class FsTableContainer extends React.Component {
         const metric = row[columnKey];
         const { value } = metric;
 
-        if (value.indexOf("=") !== -1) {
-            this.toogleFormulaDialog(true);
+        if (value.indexOf("=") === -1) {
+            return;
         }
+
+        this.setState({
+            currentEditedFormula: {
+                row,
+                rowIndex,
+                columnKey,
+                isDialogShown: true,
+            },
+        });
     };
 
-    handleFormulaCreate = () => {
-        this.toogleFormulaDialog(false);
+    handleFormulaCreate = (updatedRow, rowIndex) => {
+        this.toggleFormulaDialog(false);
+        this.handleRowChange(updatedRow, rowIndex);
     };
 
     handleFormulaCancel = () => {
-        this.toogleFormulaDialog(false);
+        this.toggleFormulaDialog(false);
     };
 
-    toogleFormulaDialog = (isDialogShown) => {
+    toggleFormulaDialog = (isDialogShown) => {
         this.setState({
-            formula: { isDialogShown },
+            currentEditedFormula: { isDialogShown },
         });
     };
 }

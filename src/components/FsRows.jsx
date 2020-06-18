@@ -35,11 +35,11 @@ function indentRows(rows) {
  */
 
 export default function FsRows(props) {
-    const { rows, columns, mode, onRowChange, onMetricChange } = props;
-    const normalizedRows = indentRows(rows, 0);
+    const { rows, columns, mode, onRowChange, onMetricChange, onMetricClick } = props;
+    const rowsWithIndent = indentRows(rows, 0);
     return (
         <>
-            {normalizedRows.map((row, index) => (
+            {rowsWithIndent.map((row, index) => (
                 <FsRow
                     key={index}
                     row={row}
@@ -48,6 +48,7 @@ export default function FsRows(props) {
                     mode={mode}
                     onRowChange={onRowChange}
                     onMetricChange={onMetricChange}
+                    onMetricClick={onMetricClick}
                 />
             ))}
         </>

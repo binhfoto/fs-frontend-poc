@@ -12,7 +12,7 @@ function renderHeader(columns) {
     );
 }
 
-function renderRows(rows, columns, mode, onRowChange, onMetricChange) {
+function renderRows(rows, columns, mode, onRowChange, onMetricChange, onMetricClick) {
     return (
         <tbody>
             <FsRows
@@ -21,18 +21,19 @@ function renderRows(rows, columns, mode, onRowChange, onMetricChange) {
                 mode={mode}
                 onRowChange={onRowChange}
                 onMetricChange={onMetricChange}
+                onMetricClick={onMetricClick}
             />
         </tbody>
     );
 }
 
 function FsTable(props) {
-    const { rows, columns, mode, onRowChange, onMetricChange } = props;
+    const { rows, columns, mode, onRowChange, onMetricChange, onMetricClick } = props;
 
     return (
         <Table striped bordered>
             {renderHeader(columns, mode)}
-            {renderRows(rows, columns, mode, onRowChange, onMetricChange)}
+            {renderRows(rows, columns, mode, onRowChange, onMetricChange, onMetricClick)}
         </Table>
     );
 }

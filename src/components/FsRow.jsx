@@ -26,6 +26,15 @@ function handleMetricFieldChange(row, rowIndex, columnKey, onRowChange, onMetric
     onMetricChange(updatedRow, rowIndex, columnKey);
 }
 
+function handleMetricFieldClick(row, rowIndex, columnKey, onMetricClick) {
+    if (!onMetricClick) {
+        return;
+    }
+
+    const metric = row[columnKey];
+    onMetricClick(metric);
+}
+
 function renderEditableTextField(row, rowIndex, columnKey, isEditMode, onRowChange) {
     const value = row[columnKey];
     if (!isEditMode) {
@@ -63,7 +72,15 @@ function renderEditableTextFieldWithIndent(row, rowIndex, columnKey, isEditMode,
     return <div style={style}>{element}</div>;
 }
 
-function renderEditableMetricField(row, rowIndex, columnKey, isEditMode, onRowChange, onMetricChange) {
+function renderEditableMetricField(
+    row,
+    rowIndex,
+    columnKey,
+    isEditMode,
+    onRowChange,
+    onMetricChange,
+    onMetricClick,
+) {
     const { value } = row[columnKey];
     if (isEditMode) {
         return (
@@ -81,7 +98,11 @@ function renderEditableMetricField(row, rowIndex, columnKey, isEditMode, onRowCh
             />
         );
     }
-    return value;
+    return (
+        <span onClick={partial(handleMetricFieldClick, row, rowIndex, columnKey, onMetricClick)}>
+            {value}
+        </span>
+    );
 }
 
 function renderSelectionField(row, columnKey, isEditMode) {
@@ -107,7 +128,7 @@ function renderActionsField(isEditMode) {
 
 // TODO: convert this to class component so that we don't pass props around
 export default function FsRow(props) {
-    const { row, index: rowIndex, columns, mode, onRowChange, onMetricChange } = props;
+    const { row, index: rowIndex, columns, mode, onRowChange, onMetricChange, onMetricClick } = props;
     const isEditMode = mode.indexOf("edit") !== -1;
 
     const tds = columns.map((column, index) => {
@@ -138,7 +159,15 @@ export default function FsRow(props) {
         if (isObject(fieldValue)) {
             return (
                 <td key={key}>
-                    {renderEditableMetricField(row, rowIndex, key, isEditMode, onRowChange, onMetricChange)}
+                    {renderEditableMetricField(
+                        row,
+                        rowIndex,
+                        key,
+                        isEditMode,
+                        onRowChange,
+                        onMetricChange,
+                        onMetricClick,
+                    )}
                 </td>
             );
         }
