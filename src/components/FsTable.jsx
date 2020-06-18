@@ -12,21 +12,21 @@ function renderHeader(columns) {
     );
 }
 
-function renderRows(rows, columns, mode) {
+function renderRows(rows, columns, mode, onRowChange) {
     return (
         <tbody>
-            <FsRows rows={rows} columns={columns} mode={mode} />
+            <FsRows rows={rows} columns={columns} mode={mode} onRowChange={onRowChange} />
         </tbody>
     );
 }
 
 function FsTable(props) {
-    const { rows, columns, mode } = props;
+    const { rows, columns, mode, onRowChange } = props;
 
     return (
         <Table striped bordered>
             {renderHeader(columns, mode)}
-            {renderRows(rows, columns, mode)}
+            {renderRows(rows, columns, mode, onRowChange)}
         </Table>
     );
 }

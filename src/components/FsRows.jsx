@@ -1,23 +1,15 @@
 import React from "react";
-import isEmpty from "lodash/isEmpty";
-
 import FsRow from "./FsRow";
 
-function normalizeRows(rows, indent) {
-    let flatRows = [];
-
-    rows.forEach((row) => {
-        if (!row) {
-            return [];
-        }
-
-        flatRows = [...flatRows, { ...row, indent }];
-        if (!isEmpty(row.rows)) {
-            flatRows = [...flatRows, ...normalizeRows(row.rows, indent + 1)];
-        }
+function indentRows(rows) {
+    return rows.map((row, index) => {
+        const { path } = row;
+        const indent = path.split(".").length - 1;
+        return {
+            ...row,
+            indent,
+        };
     });
-
-    return flatRows;
 }
 
 /* 
@@ -43,12 +35,19 @@ function normalizeRows(rows, indent) {
  */
 
 export default function FsRows(props) {
-    const { rows, columns, mode } = props;
-    const normalizedRows = normalizeRows(rows, 0);
+    const { rows, columns, mode, onRowChange } = props;
+    const normalizedRows = indentRows(rows, 0);
     return (
         <>
             {normalizedRows.map((row, index) => (
-                <FsRow key={index} row={row} columns={columns} mode={mode} />
+                <FsRow
+                    key={index}
+                    row={row}
+                    index={index}
+                    columns={columns}
+                    mode={mode}
+                    onRowChange={onRowChange}
+                />
             ))}
         </>
     );
