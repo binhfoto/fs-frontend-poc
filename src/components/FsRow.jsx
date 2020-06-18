@@ -20,6 +20,12 @@ function handleFieldChange(row, rowIndex, columnKey, onRowChange, event) {
     onRowChange(updatedRow, rowIndex);
 }
 
+function handleMetricFieldChange(row, rowIndex, columnKey, onRowChange, onMetricChange, event) {
+    const updatedRow = getUpdatedRow(row, columnKey, event.target.value);
+    onRowChange(updatedRow, rowIndex);
+    onMetricChange(updatedRow, rowIndex, columnKey);
+}
+
 function renderEditableTextField(row, rowIndex, columnKey, isEditMode, onRowChange) {
     const value = row[columnKey];
     if (!isEditMode) {
@@ -40,7 +46,7 @@ function renderEditableTextField(row, rowIndex, columnKey, isEditMode, onRowChan
 function renderEditableTextFieldWithIndent(row, rowIndex, columnKey, isEditMode, onRowChange) {
     const value = row[columnKey];
     const style = {
-        marginLeft: row.indent * 15, // TODO: define constant for 15
+        marginLeft: row.indent * 15, // TODO: define constant for 15px
     };
 
     let element = value;
@@ -57,14 +63,21 @@ function renderEditableTextFieldWithIndent(row, rowIndex, columnKey, isEditMode,
     return <div style={style}>{element}</div>;
 }
 
-function renderEditableMetricField(row, rowIndex, columnKey, isEditMode, onRowChange) {
+function renderEditableMetricField(row, rowIndex, columnKey, isEditMode, onRowChange, onMetricChange) {
     const { value } = row[columnKey];
     if (isEditMode) {
         return (
             <input
-                type="number"
+                type="text" // it should be "number"
                 value={value}
-                onChange={partial(handleFieldChange, row, rowIndex, columnKey, onRowChange)}
+                onChange={partial(
+                    handleMetricFieldChange,
+                    row,
+                    rowIndex,
+                    columnKey,
+                    onRowChange,
+                    onMetricChange,
+                )}
             />
         );
     }
@@ -94,7 +107,7 @@ function renderActionsField(isEditMode) {
 
 // TODO: convert this to class component so that we don't pass props around
 export default function FsRow(props) {
-    const { row, index: rowIndex, columns, mode, onRowChange } = props;
+    const { row, index: rowIndex, columns, mode, onRowChange, onMetricChange } = props;
     const isEditMode = mode.indexOf("edit") !== -1;
 
     const tds = columns.map((column, index) => {
@@ -124,7 +137,9 @@ export default function FsRow(props) {
 
         if (isObject(fieldValue)) {
             return (
-                <td key={key}>{renderEditableMetricField(row, rowIndex, key, isEditMode, onRowChange)}</td>
+                <td key={key}>
+                    {renderEditableMetricField(row, rowIndex, key, isEditMode, onRowChange, onMetricChange)}
+                </td>
             );
         }
 

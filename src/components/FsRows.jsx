@@ -35,7 +35,7 @@ function indentRows(rows) {
  */
 
 export default function FsRows(props) {
-    const { rows, columns, mode, onRowChange } = props;
+    const { rows, columns, mode, onRowChange, onMetricChange } = props;
     const normalizedRows = indentRows(rows, 0);
     return (
         <>
@@ -47,6 +47,7 @@ export default function FsRows(props) {
                     columns={columns}
                     mode={mode}
                     onRowChange={onRowChange}
+                    onMetricChange={onMetricChange}
                 />
             ))}
         </>
