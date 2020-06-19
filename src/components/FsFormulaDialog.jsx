@@ -67,7 +67,14 @@ export default class FsFormulaDialog extends Component {
 
     renderPickingFieldTable = () => {
         const { rows, columns } = this.props;
-        return <FsTable rows={rows} columns={columns} mode="view" onMetricClick={this.handleMetricClick} />;
+        return (
+            <FsTable
+                rows={rows}
+                columns={columns}
+                mode="view"
+                events={{ onMetricClick: this.handleMetricClick }}
+            />
+        );
     };
 
     handleMetricClick = (metric) => {

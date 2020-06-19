@@ -12,28 +12,21 @@ function renderHeader(columns) {
     );
 }
 
-function renderRows(rows, columns, mode, onRowChange, onMetricChange, onMetricClick) {
+function renderRows(rows, columns, mode, events) {
     return (
         <tbody>
-            <FsRows
-                rows={rows}
-                columns={columns}
-                mode={mode}
-                onRowChange={onRowChange}
-                onMetricChange={onMetricChange}
-                onMetricClick={onMetricClick}
-            />
+            <FsRows rows={rows} columns={columns} mode={mode} events={events} />
         </tbody>
     );
 }
 
 function FsTable(props) {
-    const { rows, columns, mode, onRowChange, onMetricChange, onMetricClick } = props;
+    const { rows, columns, mode, events } = props;
 
     return (
-        <Table striped bordered>
+        <Table striped bordered size="xl">
             {renderHeader(columns, mode)}
-            {renderRows(rows, columns, mode, onRowChange, onMetricChange, onMetricClick)}
+            {renderRows(rows, columns, mode, events)}
         </Table>
     );
 }

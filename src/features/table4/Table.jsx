@@ -30,8 +30,10 @@ class FsTableContainer extends Component {
                     columns={columns}
                     rows={rows}
                     mode="edit"
-                    onRowChange={this.handleRowChange}
-                    onMetricChange={this.handleMetricField}
+                    events={{
+                        onRowChange: this.handleRowChange,
+                        onFormulaDialogOpen: this.handleFormulaDialogOpen,
+                    }}
                 />
                 <FsFormulaDialog
                     currentFormula={currentEditedFormula}
@@ -56,14 +58,7 @@ class FsTableContainer extends Component {
         this.setState({ rows: updatedRows });
     };
 
-    handleMetricField = (row, rowIndex, columnKey) => {
-        const metric = row[columnKey];
-        const { value } = metric;
-
-        if (value.indexOf("=") === -1) {
-            return;
-        }
-
+    handleFormulaDialogOpen = (row, rowIndex, columnKey) => {
         this.setState({
             currentEditedFormula: {
                 row,

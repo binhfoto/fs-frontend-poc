@@ -1,4 +1,6 @@
 import React from "react";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import isObject from "lodash/isObject";
 import cloneDeep from "lodash/cloneDeep";
 import partial from "lodash/partial";
@@ -20,19 +22,10 @@ function handleFieldChange(row, rowIndex, columnKey, onRowChange, event) {
     onRowChange(updatedRow, rowIndex);
 }
 
-function handleMetricFieldChange(row, rowIndex, columnKey, onRowChange, onMetricChange, event) {
-    const updatedRow = getUpdatedRow(row, columnKey, event.target.value);
-    onRowChange(updatedRow, rowIndex);
-    onMetricChange(updatedRow, rowIndex, columnKey);
-}
-
 function handleMetricFieldClick(row, rowIndex, columnKey, onMetricClick) {
-    if (!onMetricClick) {
-        return;
+    if (onMetricClick) {
+        onMetricClick(row[columnKey]);
     }
-
-    const metric = row[columnKey];
-    onMetricClick(metric);
 }
 
 function renderEditableTextField(row, rowIndex, columnKey, isEditMode, onRowChange) {
@@ -78,24 +71,28 @@ function renderEditableMetricField(
     columnKey,
     isEditMode,
     onRowChange,
-    onMetricChange,
+    onFormulaDialogOpen,
     onMetricClick,
 ) {
     const { value } = row[columnKey];
     if (isEditMode) {
         return (
-            <input
-                type="text" // it should be "number"
-                value={value}
-                onChange={partial(
-                    handleMetricFieldChange,
-                    row,
-                    rowIndex,
-                    columnKey,
-                    onRowChange,
-                    onMetricChange,
-                )}
-            />
+            <Form inline onSubmit={(event) => event.preventDefault()}>
+                <Form.Control
+                    inline
+                    className="mb-2 mr-sm-2"
+                    id="inlineFormInputName2"
+                    value={value}
+                    onChange={partial(handleFieldChange, row, rowIndex, columnKey, onRowChange)}
+                />
+                <Button
+                    variant="outline-dark"
+                    size="sm"
+                    onClick={partial(onFormulaDialogOpen, row, rowIndex, columnKey)}
+                >
+                    f(x)
+                </Button>
+            </Form>
         );
     }
     return (
@@ -128,7 +125,8 @@ function renderActionsField(isEditMode) {
 
 // TODO: convert this to class component so that we don't pass props around
 export default function FsRow(props) {
-    const { row, index: rowIndex, columns, mode, onRowChange, onMetricChange, onMetricClick } = props;
+    const { row, index: rowIndex, columns, mode, events } = props;
+    const { onRowChange, onFormulaDialogOpen, onMetricClick } = events;
     const isEditMode = mode.indexOf("edit") !== -1;
 
     const tds = columns.map((column, index) => {
@@ -165,7 +163,7 @@ export default function FsRow(props) {
                         key,
                         isEditMode,
                         onRowChange,
-                        onMetricChange,
+                        onFormulaDialogOpen,
                         onMetricClick,
                     )}
                 </td>
