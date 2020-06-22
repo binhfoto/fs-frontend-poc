@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-// import isObject from "lodash/isObject";
-
-import FsTable from "../../components/FsTable";
+import { useSelector } from "react-redux";
 import FsFormulaDialog from "../../components/FsFormulaDialog";
-
+// import isObject from "lodash/isObject";
+import FsTable from "../../components/FsTable";
 // TODO: fetch this from backend
 import fixture from "../../fixtures/table4-tong-muc-dau-tu";
+import { rowsSelector, columnsSelector } from "../../redux/selectors";
 
 class FsTableContainer extends Component {
     constructor(props) {
@@ -58,6 +58,24 @@ class FsTableContainer extends Component {
         this.setState({ rows: updatedRows });
     };
 
+    handleMetricChange = (row, rowIndex, columnKey) => {
+        const metric = row[columnKey];
+        const { value } = metric;
+
+        if (value.indexOf("=") === -1) {
+            return;
+        }
+
+        this.setState({
+            currentEditedFormula: {
+                row,
+                rowIndex,
+                columnKey,
+                isDialogShown: true,
+            },
+        });
+    };
+
     handleFormulaDialogOpen = (row, rowIndex, columnKey) => {
         this.setState({
             currentEditedFormula: {
@@ -85,4 +103,11 @@ class FsTableContainer extends Component {
     };
 }
 
-export default FsTableContainer;
+// export default FsTableContainer;
+
+export default function Table(props) {
+    const { id } = props;
+    const rows = useSelector(rowsSelector(id));
+    const columns = useSelector(columnsSelector(id));
+    return <FsTable id={id} columns={columns} rows={rows} mode="edit" />;
+}

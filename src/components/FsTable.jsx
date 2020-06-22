@@ -21,7 +21,7 @@ function renderRows(rows, columns, mode, events) {
 }
 
 function FsTable(props) {
-    const { rows, columns, mode, events } = props;
+    const { id, rows, columns, mode, events } = props;
 
     return (
         <Table striped bordered size="xl">

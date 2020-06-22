@@ -1,14 +1,18 @@
 import React from "react";
+import { Provider } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/index.css";
 
-import FsTableContainer from "./features/table4/Table";
+import store from "./redux/store";
+import Table from "./features/table4/Table";
 
 function App() {
     return (
-        <div className="container">
-            <FsTableContainer />
-        </div>
+        <Provider store={store}>
+            <div className="container">
+                <Table id="table4" />
+            </div>
+        </Provider>
     );
 }
 

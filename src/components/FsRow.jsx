@@ -4,6 +4,8 @@ import Form from "react-bootstrap/Form";
 import isObject from "lodash/isObject";
 import cloneDeep from "lodash/cloneDeep";
 import partial from "lodash/partial";
+import FsSelectionCell from "./FsSelectionCell";
+import FsTextCell from "./FsTextCell";
 // import isNil from "lodash/isNil";
 
 function getUpdatedRow(row, columnKey, value) {
@@ -17,8 +19,13 @@ function getUpdatedRow(row, columnKey, value) {
     return newRow;
 }
 
-function handleFieldChange(row, rowIndex, columnKey, onRowChange, event) {
+function handleTextFieldChange(row, rowIndex, columnKey, onRowChange, event) {
     const updatedRow = getUpdatedRow(row, columnKey, event.target.value);
+    onRowChange(updatedRow, rowIndex);
+}
+
+function handleSelectionFieldChange(row, rowIndex, columnKey, onRowChange, event) {
+    const updatedRow = getUpdatedRow(row, columnKey, event.target.checked);
     onRowChange(updatedRow, rowIndex);
 }
 
@@ -39,7 +46,7 @@ function renderEditableTextField(row, rowIndex, columnKey, isEditMode, onRowChan
             <input
                 type="text"
                 value={value}
-                onChange={partial(handleFieldChange, row, rowIndex, columnKey, onRowChange)}
+                onChange={partial(handleTextFieldChange, row, rowIndex, columnKey, onRowChange)}
             />
         </div>
     );
@@ -57,7 +64,7 @@ function renderEditableTextFieldWithIndent(row, rowIndex, columnKey, isEditMode,
             <input
                 type="text"
                 value={value}
-                onChange={partial(handleFieldChange, row, rowIndex, columnKey, onRowChange)}
+                onChange={partial(handleTextFieldChange, row, rowIndex, columnKey, onRowChange)}
             />
         );
     }
@@ -83,7 +90,7 @@ function renderEditableMetricField(
                     className="mb-2 mr-sm-2"
                     id="inlineFormInputName2"
                     value={value}
-                    onChange={partial(handleFieldChange, row, rowIndex, columnKey, onRowChange)}
+                    onChange={partial(handleTextFieldChange, row, rowIndex, columnKey, onRowChange)}
                 />
                 <Button
                     variant="outline-dark"
@@ -102,12 +109,18 @@ function renderEditableMetricField(
     );
 }
 
-function renderSelectionField(row, columnKey, isEditMode) {
+function renderSelectionField(row, rowIndex, columnKey, isEditMode, onRowChange) {
     const value = row[columnKey];
     if (!isEditMode) {
         return null;
     }
-    return <input type="checkbox" checked={value} />;
+    return (
+        <Form.Check
+            type="checkbox"
+            checked={value}
+            onChange={partial(handleSelectionFieldChange, row, rowIndex, columnKey, onRowChange)}
+        />
+    );
 }
 
 function renderActionsField(isEditMode) {
@@ -124,15 +137,67 @@ function renderActionsField(isEditMode) {
 }
 
 // TODO: convert this to class component so that we don't pass props around
+// export default function FsRow(props) {
+//     const { row, index: rowIndex, columns, mode, events = [] } = props;
+//     const { onRowChange, onFormulaDialogOpen, onMetricClick } = events;
+//     const isEditMode = mode.indexOf("edit") !== -1;
+
+//     const tds = columns.map((column, index) => {
+//         const { key } = column;
+//         const fieldValue = row[key];
+
+//         if (isEditMode && index === columns.length - 1) {
+//             return <td key={key}>{renderActionsField(isEditMode)}</td>;
+//         }
+
+//         // if (isNil(fieldValue)) {
+//         //     // is null or undefined
+//         //     return <td key={key}></td>;
+//         // }
+
+//         if (key === "isSelected") {
+//             return <td key={key}>{renderSelectionField(row, rowIndex, key, isEditMode, onRowChange)}</td>;
+//         }
+
+//         if (key === "name") {
+//             return (
+//                 <td key={key}>
+//                     {renderEditableTextFieldWithIndent(row, rowIndex, key, isEditMode, onRowChange)}
+//                 </td>
+//             );
+//         }
+
+//         if (isObject(fieldValue)) {
+//             return (
+//                 <td key={key}>
+//                     {renderEditableMetricField(
+//                         row,
+//                         rowIndex,
+//                         key,
+//                         isEditMode,
+//                         onRowChange,
+//                         onFormulaDialogOpen,
+//                         onMetricClick,
+//                     )}
+//                 </td>
+//             );
+//         }
+
+//         return <td key={key}>{renderEditableTextField(row, rowIndex, key, isEditMode, onRowChange)}</td>;
+//     });
+
+//     return <tr>{tds}</tr>;
+// }
+
 export default function FsRow(props) {
-    const { row, index: rowIndex, columns, mode, events } = props;
-    const { onRowChange, onFormulaDialogOpen, onMetricClick } = events;
+    const { row, index: rowIndex, columns, mode } = props;
     const isEditMode = mode.indexOf("edit") !== -1;
 
     const tds = columns.map((column, index) => {
         const { key } = column;
         const fieldValue = row[key];
 
+        // TODO: handle view/edit mode later
         if (isEditMode && index === columns.length - 1) {
             return <td key={key}>{renderActionsField(isEditMode)}</td>;
         }
@@ -143,34 +208,36 @@ export default function FsRow(props) {
         // }
 
         if (key === "isSelected") {
-            return <td key={key}>{renderSelectionField(row, key, isEditMode)}</td>;
+            return (
+                <td key={key}>
+                    <FsSelectionCell row={row} columnId={key} isEditMode={isEditMode} />
+                </td>
+            );
         }
 
         if (key === "name") {
             return (
                 <td key={key}>
-                    {renderEditableTextFieldWithIndent(row, rowIndex, key, isEditMode, onRowChange)}
+                    <FsTextCell row={row} columnId={key} isEditMode={isEditMode} />
                 </td>
             );
         }
 
-        if (isObject(fieldValue)) {
-            return (
-                <td key={key}>
-                    {renderEditableMetricField(
-                        row,
-                        rowIndex,
-                        key,
-                        isEditMode,
-                        onRowChange,
-                        onFormulaDialogOpen,
-                        onMetricClick,
-                    )}
-                </td>
-            );
-        }
+        // if (isObject(fieldValue)) {
+        //     return (
+        //         <td key={key}>
+        //             {renderEditableMetricField(row, rowIndex, key, isEditMode, null, null, null)}
+        //         </td>
+        //     );
+        // }
 
-        return <td key={key}>{renderEditableTextField(row, rowIndex, key, isEditMode, onRowChange)}</td>;
+        return (
+            <td key={key}>
+                <FsTextCell row={row} columnId={key} isEditMode={isEditMode} />
+            </td>
+        );
+
+        // return <td key={key}></td>;
     });
 
     return <tr>{tds}</tr>;

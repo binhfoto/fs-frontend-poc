@@ -1,0 +1,6 @@
+export const ADD_ROW = "ADD_ROW";
+export const REMOVE_ROW = "REMOVE_ROW";
+export const UPDATE_ROW = "UPDATE_ROW";
+
+export const TOGGLE_ROW_SELECTION = "TOGGLE_ROW_SELECTION";
+export const TOGGLE_ALL_ROWS_SELECTION = "TOGGLE_ALL_ROWS_SELECTION";
