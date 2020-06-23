@@ -13,12 +13,12 @@ function indentRows(rows) {
 }
 
 export default function FsRows(props) {
-    const { rows, columns, mode, events } = props;
+    const { rows, columns, mode } = props;
     const rowsWithIndent = indentRows(rows, 0);
     return (
         <>
             {rowsWithIndent.map((row, index) => (
-                <FsRow key={index} row={row} index={index} columns={columns} mode={mode} events={events} />
+                <FsRow key={index} row={row} index={index} columns={columns} mode={mode} />
             ))}
         </>
     );

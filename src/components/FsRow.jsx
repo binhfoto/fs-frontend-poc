@@ -6,6 +6,8 @@ import cloneDeep from "lodash/cloneDeep";
 import partial from "lodash/partial";
 import FsSelectionCell from "./FsSelectionCell";
 import FsTextCell from "./FsTextCell";
+import FsMetricCell from "./FsMetricCell";
+import FsActionsCell from "./FsActionsCell";
 // import isNil from "lodash/isNil";
 
 function getUpdatedRow(row, columnKey, value) {
@@ -136,61 +138,8 @@ function renderActionsField(isEditMode) {
     );
 }
 
-// TODO: convert this to class component so that we don't pass props around
-// export default function FsRow(props) {
-//     const { row, index: rowIndex, columns, mode, events = [] } = props;
-//     const { onRowChange, onFormulaDialogOpen, onMetricClick } = events;
-//     const isEditMode = mode.indexOf("edit") !== -1;
-
-//     const tds = columns.map((column, index) => {
-//         const { key } = column;
-//         const fieldValue = row[key];
-
-//         if (isEditMode && index === columns.length - 1) {
-//             return <td key={key}>{renderActionsField(isEditMode)}</td>;
-//         }
-
-//         // if (isNil(fieldValue)) {
-//         //     // is null or undefined
-//         //     return <td key={key}></td>;
-//         // }
-
-//         if (key === "isSelected") {
-//             return <td key={key}>{renderSelectionField(row, rowIndex, key, isEditMode, onRowChange)}</td>;
-//         }
-
-//         if (key === "name") {
-//             return (
-//                 <td key={key}>
-//                     {renderEditableTextFieldWithIndent(row, rowIndex, key, isEditMode, onRowChange)}
-//                 </td>
-//             );
-//         }
-
-//         if (isObject(fieldValue)) {
-//             return (
-//                 <td key={key}>
-//                     {renderEditableMetricField(
-//                         row,
-//                         rowIndex,
-//                         key,
-//                         isEditMode,
-//                         onRowChange,
-//                         onFormulaDialogOpen,
-//                         onMetricClick,
-//                     )}
-//                 </td>
-//             );
-//         }
-
-//         return <td key={key}>{renderEditableTextField(row, rowIndex, key, isEditMode, onRowChange)}</td>;
-//     });
-
-//     return <tr>{tds}</tr>;
-// }
-
 export default function FsRow(props) {
-    const { row, index: rowIndex, columns, mode } = props;
+    const { row, columns, mode } = props;
     const isEditMode = mode.indexOf("edit") !== -1;
 
     const tds = columns.map((column, index) => {
@@ -199,13 +148,16 @@ export default function FsRow(props) {
 
         // TODO: handle view/edit mode later
         if (isEditMode && index === columns.length - 1) {
-            return <td key={key}>{renderActionsField(isEditMode)}</td>;
+            return (
+                <td key={key}>
+                    <FsActionsCell row={row} columnId={key} isEditMode={isEditMode} />
+                </td>
+            );
         }
 
-        // if (isNil(fieldValue)) {
-        //     // is null or undefined
-        //     return <td key={key}></td>;
-        // }
+        if (key === "path") {
+            return <td key={key}>{fieldValue}</td>;
+        }
 
         if (key === "isSelected") {
             return (
@@ -216,28 +168,27 @@ export default function FsRow(props) {
         }
 
         if (key === "name") {
+            // handle indent here
             return (
                 <td key={key}>
-                    <FsTextCell row={row} columnId={key} isEditMode={isEditMode} />
+                    <FsTextCell row={row} columnId={key} isEditMode={isEditMode} indent={row.indent} />
                 </td>
             );
         }
 
-        // if (isObject(fieldValue)) {
-        //     return (
-        //         <td key={key}>
-        //             {renderEditableMetricField(row, rowIndex, key, isEditMode, null, null, null)}
-        //         </td>
-        //     );
-        // }
+        if (isObject(fieldValue)) {
+            return (
+                <td key={key}>
+                    <FsMetricCell row={row} columnId={key} isEditMode={isEditMode} />
+                </td>
+            );
+        }
 
         return (
             <td key={key}>
                 <FsTextCell row={row} columnId={key} isEditMode={isEditMode} />
             </td>
         );
-
-        // return <td key={key}></td>;
     });
 
     return <tr>{tds}</tr>;

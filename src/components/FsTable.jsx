@@ -12,21 +12,21 @@ function renderHeader(columns) {
     );
 }
 
-function renderRows(rows, columns, mode, events) {
+function renderRows(rows, columns, mode) {
     return (
         <tbody>
-            <FsRows rows={rows} columns={columns} mode={mode} events={events} />
+            <FsRows rows={rows} columns={columns} mode={mode} />
         </tbody>
     );
 }
 
 function FsTable(props) {
-    const { id, rows, columns, mode, events } = props;
+    const { rows, columns, mode } = props;
 
     return (
         <Table striped bordered size="xl">
             {renderHeader(columns, mode)}
-            {renderRows(rows, columns, mode, events)}
+            {renderRows(rows, columns, mode)}
         </Table>
     );
 }

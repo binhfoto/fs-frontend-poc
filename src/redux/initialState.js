@@ -1,6 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
+    mode: "edit",
+    currentEditedFormula: {
+        row: null,
+        columnId: null,
+        isDialogShown: false,
+    },
     table4: {
         columns: [
             {
@@ -136,7 +142,7 @@ const initialState = {
                 },
                 uuid4: {
                     uuid: "uuid4",
-                    isSelected: true,
+                    isSelected: false,
                     name: "TSDĐ đất dự kiến đóng thêm",
                     path: "1.2",
                     price: {
@@ -168,7 +174,7 @@ const initialState = {
                 },
                 uuid5: {
                     uuid: "uuid5",
-                    isSelected: true,
+                    isSelected: false,
                     name: "TSDĐ TMDV",
                     path: "1.2.1",
                     price: {

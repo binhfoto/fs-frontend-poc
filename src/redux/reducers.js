@@ -2,29 +2,28 @@ import { combineReducers } from "redux";
 import merge from "lodash/merge";
 import { createTableWrapperReducer } from "./utils";
 
-function updateRowReducer(state = {}, action) {
-    const { payload } = action;
+function updateRowReducer(state = {}, payload) {
     return merge({}, state, payload);
 }
 
 function byIdReducer(state = {}, action) {
-    const { type, name, payload } = action;
+    const { type, payload } = action;
     switch (type) {
         case "TOGGLE_ROW_SELECTION":
         case "UPDATE_ROW":
-            return updateRowReducer(state, action);
+            return updateRowReducer(state, payload);
         default:
             return state;
     }
 }
 
 function allIdsReducer(state = [], action) {
-    const { type, name, payload } = action;
+    const { type, payload } = action;
     return state;
 }
 
 function selectAllRowsReducer(state = false, action) {
-    const { type, name, payload } = action;
+    const { type, payload } = action;
     return state;
 }
 
@@ -39,7 +38,25 @@ const tableReducer = combineReducers({
     isSelectAll: selectAllRowsReducer,
 });
 
+const currentEditedFormulaReducer = (state = {}, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case "OPEN_FORMULA_DIALOG":
+            return payload;
+        case "CLOSE_FORMULA_DIALOG":
+            return {
+                row: null,
+                columnId: null,
+                isDialogShown: false,
+            };
+        default:
+            return state;
+    }
+};
+
 const fsReducer = combineReducers({
+    currentEditedFormula: currentEditedFormulaReducer,
+    mode: (state = "edit") => state,
     table4: createTableWrapperReducer(tableReducer, "table4"),
 });
 
