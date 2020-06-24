@@ -1,5 +1,8 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 import FsRows from "./FsRows";
 
@@ -24,10 +27,16 @@ function FsTable(props) {
     const { rows = [], columns = [], mode = "view" } = props;
 
     return (
-        <Table striped bordered size="xl">
-            {renderColumns(columns, mode)}
-            {renderRows(rows, columns, mode)}
-        </Table>
+        <Container fluid>
+            <Row>
+                <Col>
+                    <Table striped bordered size="xl">
+                        {renderColumns(columns, mode)}
+                        {renderRows(rows, columns, mode)}
+                    </Table>
+                </Col>
+            </Row>
+        </Container>
     );
 }
 

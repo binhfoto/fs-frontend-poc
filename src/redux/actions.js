@@ -10,3 +10,6 @@ export const CLOSE_FORMULA_DIALOG = "CLOSE_FORMULA_DIALOG";
 
 export const UPDATE_FORMULA = "UPDATE_FORMULA";
 export const ADD_FORMULA = "ADD_FORMULA";
+
+export const COLLAPSE_ROW = "COLLAPSE_ROW";
+export const EXPAND_ROW = "EXPAND_ROW";

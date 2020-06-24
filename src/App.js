@@ -9,9 +9,7 @@ import Table from "./features/table4/Table";
 function App() {
     return (
         <Provider store={store}>
-            <div className="container">
-                <Table id="table4" />
-            </div>
+            <Table id="table4" />
         </Provider>
     );
 }

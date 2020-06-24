@@ -2,6 +2,9 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 import FsTable from "./FsTable";
 import { COLUMNS_IN_EDIT_MODE } from "../redux/selectors";
@@ -88,11 +91,14 @@ export default function FsFormulaDialog(props) {
                 <Modal.Title>Create Formula</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div>
-                    {renderFormulaInput()}
-                    <br />
-                    {renderPickingFieldTable()}
-                </div>
+                <Container fluid>
+                    <Row>
+                        <Col>{renderFormulaInput()}</Col>
+                    </Row>
+                    <Row>
+                        <Col>{renderPickingFieldTable()}</Col>
+                    </Row>
+                </Container>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>

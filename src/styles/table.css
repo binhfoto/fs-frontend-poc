@@ -1,0 +1,7 @@
+svg.icon-caret-right,
+svg.icon-caret-down {
+    width: 16px;
+    height: 16px;
+
+    cursor: pointer;
+}

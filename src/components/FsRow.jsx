@@ -2,6 +2,7 @@ import React from "react";
 import isObject from "lodash/isObject";
 import FsSelectionCell from "./FsSelectionCell";
 import FsTextCell from "./FsTextCell";
+import FsIndentTextCell from "./FsIndentTextCell";
 import FsMetricCell from "./FsMetricCell";
 import FsActionsCell from "./FsActionsCell";
 
@@ -37,7 +38,7 @@ export default function FsRow(props) {
             // handle indent here
             return (
                 <td key={key}>
-                    <FsTextCell row={row} columnId={key} isEditMode={isEditMode} indent={row.indent} />
+                    <FsIndentTextCell row={row} columnId={key} isEditMode={isEditMode} />
                 </td>
             );
         }
