@@ -3,11 +3,13 @@ import { useDispatch } from "react-redux";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
+import { UPDATE_ROW, OPEN_FORMULA_DIALOG, ADD_FORMULA } from "../redux/actions";
+
 export default function FsMetricCell(props) {
     const { row, columnId, isEditMode } = props;
     const { tableId, uuid } = row;
     const metric = row[columnId];
-    const { value } = metric;
+    const { value, expression = "" } = metric;
 
     const inputEl = useRef(null);
     const dispatch = useDispatch();
@@ -17,7 +19,7 @@ export default function FsMetricCell(props) {
 
         if (newValue !== value) {
             dispatch({
-                type: "UPDATE_ROW",
+                type: UPDATE_ROW,
                 name: tableId,
                 payload: {
                     [uuid]: {
@@ -33,12 +35,22 @@ export default function FsMetricCell(props) {
 
     function handleFormulaDialogOpen() {
         dispatch({
-            type: "OPEN_FORMULA_DIALOG",
+            type: OPEN_FORMULA_DIALOG,
             name: tableId,
             payload: {
                 row,
                 columnId,
+                formula: expression,
                 isDialogShown: true,
+            },
+        });
+    }
+
+    function handleMetricSelected() {
+        dispatch({
+            type: ADD_FORMULA,
+            payload: {
+                uuid: metric.uuid,
             },
         });
     }
@@ -60,5 +72,5 @@ export default function FsMetricCell(props) {
         );
     }
 
-    return value;
+    return <span onClick={handleMetricSelected}>{value}</span>;
 }

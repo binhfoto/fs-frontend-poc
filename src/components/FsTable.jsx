@@ -3,7 +3,7 @@ import Table from "react-bootstrap/Table";
 
 import FsRows from "./FsRows";
 
-function renderHeader(columns) {
+function renderColumns(columns) {
     const tds = columns.map((column, index) => <th key={index}>{column.value}</th>);
     return (
         <thead>
@@ -21,11 +21,11 @@ function renderRows(rows, columns, mode) {
 }
 
 function FsTable(props) {
-    const { rows, columns, mode } = props;
+    const { rows = [], columns = [], mode = "view" } = props;
 
     return (
         <Table striped bordered size="xl">
-            {renderHeader(columns, mode)}
+            {renderColumns(columns, mode)}
             {renderRows(rows, columns, mode)}
         </Table>
     );

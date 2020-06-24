@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 const initialState = {
     mode: "edit",
     currentEditedFormula: {
+        formula: "",
         row: null,
         columnId: null,
         isDialogShown: false,
@@ -100,7 +101,7 @@ const initialState = {
                     thanhTien: {
                         uuid: uuidv4(),
                         value: null,
-                        expression: "",
+                        expression: "A + B - C",
                         displayFormula: "",
                         unit: "",
                         path: "",

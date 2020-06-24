@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 
-const COLUMNS_IN_EDIT_MODE = ["isSelected", "actions"];
+export const COLUMNS_IN_EDIT_MODE = ["isSelected", "actions"];
 
 export const modeSelector = (state) => {
     return state.mode;
@@ -36,6 +36,7 @@ export const columnsSelector = (tableId) => {
         if (mode === "view") {
             return state[tableId].columns.filter((column) => {
                 const { key } = column;
+                // filter out selection and actions columns which are available in edit mode
                 return COLUMNS_IN_EDIT_MODE.indexOf(key) === -1;
             });
         }
